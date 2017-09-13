@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportMovimento" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9596ac6f-22b9-4cf4-b4a2-9d75b6ae7cda">
+	<property name="ireport.zoom" value="0.75"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[SELECT t.idusuario, t.identificador, t.nome AS usuario, t.identidade, t.cpf, i.nome as instituto, r.nome as responsavel,
+	   DATE_FORMAT(m.dataregistro, '%d/%m/%Y') AS dataRegistro,
+	   (SELECT COUNT(mo.idmovimento) from movimento mo where mo.codusuario = t.idusuario and mo.refeicoes = 1) AS totalCafe,
+	   (SELECT COUNT(mo.idmovimento) from movimento mo where mo.codusuario = t.idusuario and mo.refeicoes = 2) AS totalAlmoco,
+	   (SELECT COUNT(mo.idmovimento) from movimento mo where mo.codusuario = t.idusuario and mo.refeicoes = 3) AS totalJantar,
+	   (SELECT t.total_cafe - count(mo.idmovimento) from movimento mo where mo.codusuario = t.idusuario and mo.refeicoes = 1) AS difCafe,
+	   (SELECT t.total_almoco - count(mo.idmovimento) from movimento mo where mo.codusuario = t.idusuario and mo.refeicoes = 2) AS difAlmoco,
+	   (SELECT t.total_Jantar - count(mo.idmovimento) from movimento mo where mo.codusuario = t.idusuario and mo.refeicoes = 3) AS difJantar
+FROM movimento m
+LEFT JOIN tblusuarios t ON m.codusuario = t.idusuario
+LEFT JOIN refeicoes re ON m.refeicoes = re.idrefeicoes
+LEFT JOIN responsavel r ON t.codresponsavel = r.idresponsavel
+LEFT JOIN delegacao d ON r.idresponsavel = d.iddelegacao
+LEFT JOIN instituto i ON d.codinstituto = i.idinstituto
+GROUP BY t.nome]]>
+	</queryString>
+	<field name="idusuario" class="java.lang.Integer"/>
+	<field name="identificador" class="java.lang.String"/>
+	<field name="usuario" class="java.lang.String"/>
+	<field name="identidade" class="java.lang.String"/>
+	<field name="cpf" class="java.lang.String"/>
+	<field name="instituto" class="java.lang.String"/>
+	<field name="responsavel" class="java.lang.String"/>
+	<field name="dataRegistro" class="java.lang.String"/>
+	<field name="totalCafe" class="java.lang.Long"/>
+	<field name="totalAlmoco" class="java.lang.Long"/>
+	<field name="totalJantar" class="java.lang.Long"/>
+	<field name="difCafe" class="java.lang.Long"/>
+	<field name="difAlmoco" class="java.lang.Long"/>
+	<field name="difJantar" class="java.lang.Long"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="d264476d-d2cc-4c39-8cf7-819431c05391" x="625" y="22" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="644188ec-f6d3-428a-9516-18ec3950f344" x="197" y="22" width="196" height="29"/>
+				<textElement textAlignment="Justified">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RELAÇÃO DE MOVIMENTO]]></text>
+			</staticText>
+			<textField pattern="HH.mm">
+				<reportElement uuid="f2dd9482-c12d-4b49-9f00-f5cb88933f62" x="734" y="22" width="59" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="6303e5c4-04b7-45ac-918a-e7b9327a4e31" x="0" y="0" width="122" height="65"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Adobe Garamond Pro Bold" size="36"/>
+				</textElement>
+				<text><![CDATA[SICOR]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="62721e5e-29c5-4272-917a-37b9f38d4c5e" x="2" y="74" width="802" height="1" forecolor="#999999"/>
+				<graphicElement>
+					<pen lineStyle="Dotted"/>
+				</graphicElement>
+			</line>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="859a13fe-29cf-4900-8f9a-8eed5f011821" x="2" y="0" width="87" height="20"/>
+				<textElement/>
+				<text><![CDATA[IDENTIFICADOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6395157b-80d6-468e-8233-d9d18f5d83ca" x="89" y="0" width="271" height="20"/>
+				<textElement/>
+				<text><![CDATA[NOME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a1816a8a-eeb4-4dab-a831-d7f90d2b421f" x="360" y="0" width="67" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[DATA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3d1935c7-77ed-4cf8-9b75-8c94a540a581" x="427" y="0" width="100" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[DELEGAÇÃO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="240f12d7-4565-4fb1-b20b-078ab3a2d738" x="527" y="0" width="143" height="20"/>
+				<textElement/>
+				<text><![CDATA[RESPONSÁVEL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="38bd9546-afb5-4f97-93eb-2e2d5eab934e" x="670" y="0" width="36" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[CAFÉ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="20466c63-6d9b-41bf-adcc-3af417c28715" x="707" y="0" width="48" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[ALMOÇO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7679a7bb-469c-4d25-8fcb-efd3b96f904d" x="757" y="0" width="45" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[JANTAR]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="62721e5e-29c5-4272-917a-37b9f38d4c5e" x="2" y="21" width="802" height="1" forecolor="#999999"/>
+				<graphicElement>
+					<pen lineStyle="Dotted"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement uuid="8fe280cc-f751-452a-9e35-de62f176199e" x="2" y="0" width="87" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{identificador}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="98c1ff09-8dbe-47b1-8d3d-1dcc61dc060e" x="89" y="0" width="271" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{usuario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="ed645035-a290-472d-8cfd-0d756eea8a9a" x="360" y="0" width="67" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{dataRegistro}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="0c79234e-6b78-4d73-b9b8-a81d23c71bba" x="427" y="0" width="100" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{instituto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="7880352c-73cc-4659-993c-6d329d8c7099" x="527" y="0" width="143" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{responsavel}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="143d0024-1565-4fa6-9a42-f3053c550486" x="670" y="0" width="36" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{totalCafe}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c384b410-6575-4b69-ae32-34cb3bce8749" x="707" y="0" width="48" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{totalAlmoco}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d749df2e-fa10-4bf4-92cf-34ad4eddd5f4" x="757" y="0" width="45" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{totalJantar}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch">
+			<textField>
+				<reportElement uuid="7a706caf-1a8d-4080-93c0-4cd2fbcd405d" x="680" y="14" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="4a2c2b78-ae4e-48d9-aed3-961b506070cc" x="760" y="14" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+</jasperReport>
